@@ -32,14 +32,30 @@
   background-image:    -moz-linear-gradient(top, @fromColor, @toColor); /* FF3.6 */
   background-image:      -o-linear-gradient(top, @fromColor, @toColor); /* Opera 11.10+ */
   background-image:         linear-gradient(to bottom, @fromColor, @toColor);
+  -ms-filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{fromColor}, endColorstr=@{toColor}, GradientType=0)"; /* IE8 & IE9 */
+      filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{fromColor}, endColorstr=@{toColor}, GradientType=0)"; /* IE6 & IE7 */
+}
+
+.box_gradient(@fromColor, @midColor, @colorStop:50%, @toColor) {
+  background-color:  mix(@midColor, @toColor, 80%);
+  background-image:  -webkit-gradient(linear, 0 0, 0 100%, from(@fromColor), color-stop(@colorStop, @midColor), to(@toColor)); /* Saf4+, Chrome */
+  background-image:  -webkit-linear-gradient(@fromColor, @midColor @colorStop, @toColor); /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image:     -moz-linear-gradient(top, @fromColor, @midColor @colorStop, @toColor); /* FF3.6 */
+  background-image:       -o-linear-gradient(@fromColor, @midColor @colorStop, @toColor); /* Opera 11.10+ */
+  background-image:         linear-gradient(@fromColor, @midColor @colorStop, @toColor);
+  background-repeat: no-repeat;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{fromColor}, endColorstr=@{toColor}, GradientType=0)"; /* IE6-IE9 */ 	
 }
 
 .box_rgba(@rgbaColor) {
-  @argbColor: argb(@rgbaColor); // #AAGGRRGG conversion needed fpr ms filters.
+  @dec: ~`255 * @{alpha}`;
+  @hex: ~`'0' + parseInt(@{dec}, 10).toString(16)`;
+  @aa: ~`@{hex}.substr(@{hex}.length-2,2).toUpperCase()`;
+  @aarrggbb: ~`'#' + @{aa} + '@{color}'.substr(1,6)`;	
   background-color: transparent;
   background-color: @rgbaColor;  /* FF3+, Saf3+, Opera 10.10+, Chrome, IE9 */
-            filter: ~`"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{argbColor},endColorstr=@{argbColor})"`; /* IE6–IE9 */
-            zoom: 1;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{aarrggbb}, endColorstr=@{aarrggbb}, GradientType=0)"; /* IE6–IE9 */
+    zoom: 1;
 }
 
 .box_rotate(@degRotation) {
